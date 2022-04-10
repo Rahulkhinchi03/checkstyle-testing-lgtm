@@ -197,7 +197,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <surefire.options />
+    <surefire.options/>
     <projectVersion>${project.version}</projectVersion>
     <antlr4.version>4.9.3</antlr4.version>
     <maven.site.plugin.version>3.11.0</maven.site.plugin.version>
@@ -206,7 +206,7 @@
     <pmd.version>6.43.0</pmd.version>
     <maven.jacoco.plugin.version>0.8.8</maven.jacoco.plugin.version>
     <mockito.version>4.4.0</mockito.version>
-    <saxon.version>10.6</saxon.version>
+    <saxon.version>10.8</saxon.version>
     <maven.checkstyle.plugin.version>3.1.2</maven.checkstyle.plugin.version>
     <maven.sevntu.checkstyle.plugin.version>1.41.0</maven.sevntu.checkstyle.plugin.version>
     <maven.sevntu-checkstyle-check.checkstyle.version>
@@ -543,7 +543,7 @@
                     </goals>
                   </pluginExecutionFilter>
                   <action>
-                    <execute />
+                    <execute/>
                   </action>
                 </pluginExecution>
                 <pluginExecution>
@@ -571,7 +571,7 @@
                     </goals>
                   </pluginExecutionFilter>
                   <action>
-                    <ignore />
+                    <ignore/>
                   </action>
                 </pluginExecution>
                 <pluginExecution>
@@ -584,7 +584,7 @@
                     </goals>
                   </pluginExecutionFilter>
                   <action>
-                    <execute />
+                    <execute/>
                   </action>
                 </pluginExecution>
               </pluginExecutions>
@@ -1491,11 +1491,11 @@
             </goals>
             <configuration>
               <target>
-                <property name="mvn.project.build.directory" value="${project.build.directory}" />
-                <property name="mvn.project.version" value="${project.version}" />
-                <property name="mvn.runtime_classpath" refid="maven.runtime.classpath" />
-                <property name="project.basedir" value="${project.basedir}" />
-                <ant antfile="config/ant-phase-verify.xml" />
+                <property name="mvn.project.build.directory" value="${project.build.directory}"/>
+                <property name="mvn.project.version" value="${project.version}"/>
+                <property name="mvn.runtime_classpath" refid="maven.runtime.classpath"/>
+                <property name="project.basedir" value="${project.basedir}"/>
+                <ant antfile="config/ant-phase-verify.xml"/>
               </target>
             </configuration>
           </execution>
@@ -3612,7 +3612,7 @@
               <executable>.ci/eclipse-compiler-javac.sh</executable>
               <classpathScope>test</classpathScope>
               <arguments>
-                <classpath />
+                <classpath/>
                 <argument>${java.version}</argument>
               </arguments>
             </configuration>
