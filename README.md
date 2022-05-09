@@ -24,6 +24,8 @@ or set of validation rules (best practices).
 [![][closed issues img]][closed issues]
 [![][link check img]][link check]
 
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/checkstyle/checkstyle.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/checkstyle/checkstyle/alerts/)
+
 Members chat: [![][gitter_mem img]][gitter_mem]
 Contributors chat: [![][gitter_con img]][gitter_con]
 
