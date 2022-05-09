@@ -2,16 +2,16 @@
 <checkstyle-metadata>
    <module>
       <filter fully-qualified-name="com.puppycrawl.tools.checkstyle.filters.SuppressWithPlainTextCommentFilter"
-              name="SuppressWithPlainTextCommentFilter"
-              parent="com.puppycrawl.tools.checkstyle.Checker">
+               name="SuppressWithPlainTextCommentFilter"
+               parent="com.puppycrawl.tools.checkstyle.Checker">
          <description>&lt;p&gt;
  Filter {@code SuppressWithPlainTextCommentFilter} uses plain text to suppress
  audit events. The filter can be used only to suppress audit events received
  from the checks which implement FileSetCheck interface. In other words, the
  checks which have Checker as a parent module. The filter knows nothing about
  AST, it treats only plain text comments and extracts the information required
- for suppression from the plain text comments. Currently the filter supports
- only single line comments.
+ for suppression from the plain text comments. Currently, the filter supports
+ only single-line comments.
  &lt;/p&gt;
  &lt;p&gt;
  Please, be aware of the fact that, it is not recommended to use the filter
@@ -41,20 +41,20 @@
  &lt;/p&gt;</description>
          <properties>
             <property default-value="// CHECKSTYLE:OFF"
-                      name="offCommentFormat"
-                      type="java.util.regex.Pattern">
+                       name="offCommentFormat"
+                       type="java.util.regex.Pattern">
                <description>Specify comment pattern to trigger filter
  to begin suppression.</description>
             </property>
             <property default-value="// CHECKSTYLE:ON"
-                      name="onCommentFormat"
-                      type="java.util.regex.Pattern">
+                       name="onCommentFormat"
+                       type="java.util.regex.Pattern">
                <description>Specify comment pattern to trigger filter
  to end suppression.</description>
             </property>
             <property default-value=".*"
-                      name="checkFormat"
-                      type="java.util.regex.Pattern">
+                       name="checkFormat"
+                       type="java.util.regex.Pattern">
                <description>Specify check pattern to suppress.</description>
             </property>
             <property name="messageFormat" type="java.util.regex.Pattern">

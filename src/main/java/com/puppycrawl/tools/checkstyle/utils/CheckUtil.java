@@ -19,6 +19,7 @@
 
 package com.puppycrawl.tools.checkstyle.utils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -679,5 +680,15 @@ public final class CheckUtil {
         }
         final DetailAST firstChild = parentAst.getFirstChild();
         return extractQualifiedName(firstChild);
+    }
+
+    /**
+     * Checks if the given file path is a package-info.java file.
+     *
+     * @param filePath path to the file.
+     * @return true if the package file.
+     */
+    public static boolean isPackageInfo(String filePath) {
+        return "package-info.java".equals(new File(filePath).getName());
     }
 }

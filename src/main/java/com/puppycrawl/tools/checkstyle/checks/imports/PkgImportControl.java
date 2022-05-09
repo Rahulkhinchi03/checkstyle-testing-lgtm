@@ -194,7 +194,7 @@ class PkgImportControl extends AbstractImportControl {
         AbstractImportControl finestMatch = null;
         // Check if we are a match.
         if (matchesAtFront(forPkg)) {
-            // If there won't be match so I am the best there is.
+            // If there won't be match, so I am the best there is.
             finestMatch = this;
             // Check if any of the children match.
             for (AbstractImportControl child : children) {
@@ -242,9 +242,9 @@ class PkgImportControl extends AbstractImportControl {
      * @return if it matches.
      */
     private boolean matchesAtFrontNoRegex(String pkg) {
+        final int length = fullPackageName.length();
         return pkg.startsWith(fullPackageName)
-                && (pkg.length() == fullPackageName.length()
-                    || pkg.charAt(fullPackageName.length()) == '.');
+                && (pkg.length() == length || pkg.charAt(length) == '.');
     }
 
     @Override

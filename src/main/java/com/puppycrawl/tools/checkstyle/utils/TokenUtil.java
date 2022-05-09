@@ -22,7 +22,7 @@ package com.puppycrawl.tools.checkstyle.utils;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.BitSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
@@ -30,6 +30,7 @@ import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import com.puppycrawl.tools.checkstyle.api.DetailAST;
 import com.puppycrawl.tools.checkstyle.api.TokenTypes;
@@ -93,10 +94,11 @@ public final class TokenUtil {
      * @return unmodifiable name to value map
      */
     public static Map<String, Integer> nameToValueMapFromPublicIntFields(Class<?> cls) {
-        final Map<String, Integer> map = Arrays.stream(cls.getDeclaredFields())
+        return Arrays.stream(cls.getDeclaredFields())
             .filter(fld -> Modifier.isPublic(fld.getModifiers()) && fld.getType() == Integer.TYPE)
-            .collect(Collectors.toMap(Field::getName, fld -> getIntFromField(fld, fld.getName())));
-        return Collections.unmodifiableMap(map);
+            .collect(Collectors.toUnmodifiableMap(
+                Field::getName, fld -> getIntFromField(fld, fld.getName()))
+            );
     }
 
     /**
@@ -281,7 +283,14 @@ public final class TokenUtil {
      * @return true if type matches one of the given types.
      */
     public static boolean isOfType(int type, int... types) {
-        return Arrays.stream(types).anyMatch(tokenType -> tokenType == type);
+        boolean matching = false;
+        for (int tokenType : types) {
+            if (tokenType == type) {
+                matching = true;
+                break;
+            }
+        }
+        return matching;
     }
 
     /**
@@ -317,6 +326,31 @@ public final class TokenUtil {
         final boolean isTrue = tokenType == TokenTypes.LITERAL_TRUE;
         final boolean isFalse = tokenType == TokenTypes.LITERAL_FALSE;
         return isTrue || isFalse;
+    }
+
+    /**
+     * Creates a new {@code BitSet} from array of tokens.
+     *
+     * @param tokens to initialize the BitSet
+     * @return tokens as BitSet
+     */
+    public static BitSet asBitSet(int... tokens) {
+        return IntStream.of(tokens)
+                .collect(BitSet::new, BitSet::set, BitSet::or);
+    }
+
+    /**
+     * Creates a new {@code BitSet} from array of tokens.
+     *
+     * @param tokens to initialize the BitSet
+     * @return tokens as BitSet
+     */
+    public static BitSet asBitSet(String... tokens) {
+        return Arrays.stream(tokens)
+                .map(String::trim)
+                .filter(Predicate.not(String::isEmpty))
+                .mapToInt(TokenUtil::getTokenId)
+                .collect(BitSet::new, BitSet::set, BitSet::or);
     }
 
 }

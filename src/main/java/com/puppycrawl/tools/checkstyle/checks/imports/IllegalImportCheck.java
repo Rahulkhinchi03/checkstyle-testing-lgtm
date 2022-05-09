@@ -326,7 +326,7 @@ public class IllegalImportCheck
      * then list of packages will be interpreted as regular expressions.
      * Note, all properties for match will be used.
      *
-     * @param from array of illegal packages
+     * @param from illegal packages
      * @noinspection WeakerAccess
      */
     public final void setIllegalPkgs(String... from) {
@@ -343,7 +343,7 @@ public class IllegalImportCheck
      * then list of class names will be interpreted as regular expressions.
      * Note, all properties for match will be used.
      *
-     * @param from array of illegal classes
+     * @param from illegal classes
      */
     public void setIllegalClasses(String... from) {
         illegalClasses = from.clone();
@@ -387,10 +387,9 @@ public class IllegalImportCheck
             imp = FullIdent.createFullIdent(
                 ast.getFirstChild().getNextSibling());
         }
-        if (isIllegalImport(imp.getText())) {
-            log(ast,
-                MSG_KEY,
-                imp.getText());
+        final String importText = imp.getText();
+        if (isIllegalImport(importText)) {
+            log(ast, MSG_KEY, importText);
         }
     }
 

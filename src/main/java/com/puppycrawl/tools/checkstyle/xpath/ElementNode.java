@@ -234,7 +234,6 @@ public class ElementNode extends AbstractNode {
      *
      * @param axisNumber element from {@code AxisInfo}
      * @return {@code AxisIterator} object
-     * @noinspection resource, IOResourceOpenedButNotSafelyClosed
      */
     @Override
     public AxisIterator iterateAxis(int axisNumber) {
@@ -251,7 +250,7 @@ public class ElementNode extends AbstractNode {
                 break;
             case AxisInfo.CHILD:
                 if (hasChildNodes()) {
-                    result = new ArrayIterator.OfNodes(
+                    result = new ArrayIterator.OfNodes<>(
                             getChildren().toArray(EMPTY_ABSTRACT_NODE_ARRAY));
                 }
                 else {
@@ -343,7 +342,6 @@ public class ElementNode extends AbstractNode {
      * class has non-empty {@code close()} method.
      *
      * @return iterator
-     * @noinspection resource, IOResourceOpenedButNotSafelyClosed
      */
     private AxisIterator getPrecedingSiblingsIterator() {
         final AxisIterator result;
@@ -365,7 +363,6 @@ public class ElementNode extends AbstractNode {
      * class has non-empty {@code close()} method.
      *
      * @return iterator
-     * @noinspection resource, IOResourceOpenedButNotSafelyClosed
      */
     private AxisIterator getFollowingSiblingsIterator() {
         final AxisIterator result;
@@ -373,7 +370,7 @@ public class ElementNode extends AbstractNode {
             result = EmptyIterator.ofNodes();
         }
         else {
-            result = new ArrayIterator.OfNodes(
+            result = new ArrayIterator.OfNodes<>(
                     getFollowingSiblings().toArray(EMPTY_ABSTRACT_NODE_ARRAY));
         }
         return result;

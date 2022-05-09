@@ -123,7 +123,7 @@ public abstract class AbstractCheck extends AbstractViolationReporter {
 
     /**
      * Initialize the check. This is the time to verify that the check has
-     * everything required to perform it job.
+     * everything required to perform its job.
      */
     public void init() {
         // No code by default, should be overridden only by demand at subclasses
@@ -296,6 +296,15 @@ public abstract class AbstractCheck extends AbstractViolationReporter {
      */
     public final String getLine(int index) {
         return context.get().fileContents.getLine(index);
+    }
+
+    /**
+     * Returns full path to the file.
+     *
+     * @return full path to file.
+     */
+    public final String getFilePath() {
+        return context.get().fileContents.getFileName();
     }
 
     /**

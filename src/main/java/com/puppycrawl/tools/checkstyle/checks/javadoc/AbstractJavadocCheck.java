@@ -88,7 +88,7 @@ public abstract class AbstractJavadocCheck extends AbstractCheck {
     /**
      * This property determines if a check should log a violation upon encountering javadoc with
      * non-tight html. The default return value for this method is set to false since checks
-     * generally tend to be fine with non tight html. It can be set through config file if a check
+     * generally tend to be fine with non-tight html. It can be set through config file if a check
      * is to log violation upon encountering non-tight HTML in javadoc.
      *
      * @see ParseStatus#isNonTight()
@@ -301,16 +301,9 @@ public abstract class AbstractJavadocCheck extends AbstractCheck {
             final LineColumn treeCacheKey = new LineColumn(blockCommentNode.getLineNo(),
                     blockCommentNode.getColumnNo());
 
-            final ParseStatus result;
-
-            if (TREE_CACHE.get().containsKey(treeCacheKey)) {
-                result = TREE_CACHE.get().get(treeCacheKey);
-            }
-            else {
-                result = context.get().parser
-                        .parseJavadocAsDetailNode(blockCommentNode);
-                TREE_CACHE.get().put(treeCacheKey, result);
-            }
+            final ParseStatus result = TREE_CACHE.get().computeIfAbsent(treeCacheKey, key -> {
+                return context.get().parser.parseJavadocAsDetailNode(blockCommentNode);
+            });
 
             if (result.getParseErrorMessage() == null) {
                 if (acceptJavadocWithNonTightHtml() || !result.isNonTight()) {

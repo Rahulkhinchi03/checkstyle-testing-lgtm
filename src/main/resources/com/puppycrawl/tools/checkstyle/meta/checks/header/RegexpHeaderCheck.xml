@@ -2,8 +2,8 @@
 <checkstyle-metadata>
    <module>
       <check fully-qualified-name="com.puppycrawl.tools.checkstyle.checks.header.RegexpHeaderCheck"
-             name="RegexpHeader"
-             parent="com.puppycrawl.tools.checkstyle.Checker">
+              name="RegexpHeader"
+              parent="com.puppycrawl.tools.checkstyle.Checker">
          <description>&lt;p&gt;
  Checks the header of a source file against a header that contains a
  &lt;a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/regex/Pattern.html"&gt;
@@ -44,7 +44,7 @@
  &lt;p&gt;
  Different programming languages have different comment syntax rules,
  but all of them start a comment with a non-word character.
- Hence you can often use the non-word character class to abstract away
+ Hence, you can often use the non-word character class to abstract away
  the concrete comment syntax and allow checking the header for different
  languages with a single header definition. For example, consider the following
  header specification (note that this is not the full Apache license header):

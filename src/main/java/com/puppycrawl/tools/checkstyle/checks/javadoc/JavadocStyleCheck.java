@@ -20,15 +20,11 @@
 package com.puppycrawl.tools.checkstyle.checks.javadoc;
 
 import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import com.puppycrawl.tools.checkstyle.JavadocDetailNodeParser;
 import com.puppycrawl.tools.checkstyle.StatelessCheck;
@@ -327,25 +323,24 @@ public class JavadocStyleCheck
     public static final String MSG_EXTRA_HTML = "javadoc.extraHtml";
 
     /** HTML tags that do not require a close tag. */
-    private static final Set<String> SINGLE_TAGS = Collections.unmodifiableSortedSet(
-        Arrays.stream(new String[] {"br", "li", "dt", "dd", "hr", "img", "p", "td", "tr", "th", })
-            .collect(Collectors.toCollection(TreeSet::new)));
+    private static final Set<String> SINGLE_TAGS = Set.of(
+        "br", "li", "dt", "dd", "hr", "img", "p", "td", "tr", "th"
+    );
 
     /**
      * HTML tags that are allowed in java docs.
      * From https://www.w3schools.com/tags/default.asp
      * The forms and structure tags are not allowed
      */
-    private static final Set<String> ALLOWED_TAGS = Collections.unmodifiableSortedSet(
-        Arrays.stream(new String[] {
-            "a", "abbr", "acronym", "address", "area", "b", "bdo", "big",
-            "blockquote", "br", "caption", "cite", "code", "colgroup", "dd",
-            "del", "dfn", "div", "dl", "dt", "em", "fieldset", "font", "h1",
-            "h2", "h3", "h4", "h5", "h6", "hr", "i", "img", "ins", "kbd",
-            "li", "ol", "p", "pre", "q", "samp", "small", "span", "strong",
-            "sub", "sup", "table", "tbody", "td", "tfoot", "th", "thead",
-            "tr", "tt", "u", "ul", "var", })
-        .collect(Collectors.toCollection(TreeSet::new)));
+    private static final Set<String> ALLOWED_TAGS = Set.of(
+        "a", "abbr", "acronym", "address", "area", "b", "bdo", "big",
+        "blockquote", "br", "caption", "cite", "code", "colgroup", "dd",
+        "del", "dfn", "div", "dl", "dt", "em", "fieldset", "font", "h1",
+        "h2", "h3", "h4", "h5", "h6", "hr", "i", "img", "ins", "kbd",
+        "li", "ol", "p", "pre", "q", "samp", "small", "span", "strong",
+        "sub", "sup", "table", "tbody", "td", "tfoot", "th", "thead",
+        "tr", "tt", "u", "ul", "var"
+    );
 
     /** Specify the visibility scope where Javadoc comments are checked. */
     private Scope scope = Scope.PRIVATE;
@@ -421,13 +416,11 @@ public class JavadocStyleCheck
      * @param ast a given node.
      * @return whether we should check a given node.
      */
-    // suppress deprecation until https://github.com/checkstyle/checkstyle/issues/11166
-    @SuppressWarnings("deprecation")
     private boolean shouldCheck(final DetailAST ast) {
         boolean check = false;
 
         if (ast.getType() == TokenTypes.PACKAGE_DEF) {
-            check = getFileContents().inPackageInfo();
+            check = CheckUtil.isPackageInfo(getFilePath());
         }
         else if (!ScopeUtil.isInCodeBlock(ast)) {
             final Scope customScope = ScopeUtil.getScope(ast);
@@ -452,15 +445,13 @@ public class JavadocStyleCheck
      * @see #checkFirstSentenceEnding(DetailAST, TextBlock)
      * @see #checkHtmlTags(DetailAST, TextBlock)
      */
-    // suppress deprecation until https://github.com/checkstyle/checkstyle/issues/11166
-    @SuppressWarnings("deprecation")
     private void checkComment(final DetailAST ast, final TextBlock comment) {
         if (comment == null) {
             // checking for missing docs in JavadocStyleCheck is not consistent
             // with the rest of CheckStyle...  Even though, I didn't think it
             // made sense to make another check just to ensure that the
             // package-info.java file actually contains package Javadocs.
-            if (getFileContents().inPackageInfo()) {
+            if (CheckUtil.isPackageInfo(getFilePath())) {
                 log(ast, MSG_JAVADOC_MISSING);
             }
         }
@@ -711,7 +702,7 @@ public class JavadocStyleCheck
      * @return {@code true} if the HtmlTag is a single tag.
      */
     private static boolean isSingleTag(HtmlTag tag) {
-        // If its a singleton tag (<p>, <br>, etc.), ignore it
+        // If it's a singleton tag (<p>, <br>, etc.), ignore it
         // Can't simply not put them on the stack, since singletons
         // like <dt> and <dd> (unhappily) may either be terminated
         // or not terminated. Both options are legal.

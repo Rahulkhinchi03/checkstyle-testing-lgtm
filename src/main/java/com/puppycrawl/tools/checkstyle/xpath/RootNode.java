@@ -152,7 +152,6 @@ public class RootNode extends AbstractNode {
      *
      * @param axisNumber element from {@code AxisInfo}
      * @return {@code AxisIterator} object
-     * @noinspection resource, IOResourceOpenedButNotSafelyClosed
      */
     @Override
     public AxisIterator iterateAxis(int axisNumber) {
@@ -173,7 +172,7 @@ public class RootNode extends AbstractNode {
                 break;
             case AxisInfo.CHILD:
                 if (hasChildNodes()) {
-                    result = new ArrayIterator.OfNodes(
+                    result = new ArrayIterator.OfNodes<>(
                             getChildren().toArray(EMPTY_ABSTRACT_NODE_ARRAY));
                 }
                 else {

@@ -19,8 +19,6 @@
 
 package com.puppycrawl.tools.checkstyle.checks.javadoc;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -37,14 +35,12 @@ public final class JavadocTags {
     /**
      * Creates an instance.
      *
-     * @param tags the list of valid tags
-     * @param invalidTags the list of invalid tags
+     * @param tags valid tags
+     * @param invalidTags invalid tags
      */
     public JavadocTags(List<JavadocTag> tags, List<InvalidJavadocTag> invalidTags) {
-        final List<JavadocTag> validTagsCopy = new ArrayList<>(tags);
-        validTags = Collections.unmodifiableList(validTagsCopy);
-        final List<InvalidJavadocTag> invalidTagsCopy = new ArrayList<>(invalidTags);
-        this.invalidTags = Collections.unmodifiableList(invalidTagsCopy);
+        validTags = List.copyOf(tags);
+        this.invalidTags = List.copyOf(invalidTags);
     }
 
     /**
@@ -53,7 +49,7 @@ public final class JavadocTags {
      *  @return validTags field
      */
     public List<JavadocTag> getValidTags() {
-        return Collections.unmodifiableList(validTags);
+        return validTags;
     }
 
     /**
@@ -62,7 +58,7 @@ public final class JavadocTags {
      *  @return invalidTags field
      */
     public List<InvalidJavadocTag> getInvalidTags() {
-        return Collections.unmodifiableList(invalidTags);
+        return invalidTags;
     }
 
 }

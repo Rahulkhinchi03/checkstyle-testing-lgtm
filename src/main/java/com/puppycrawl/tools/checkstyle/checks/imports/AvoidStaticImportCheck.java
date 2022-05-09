@@ -138,7 +138,7 @@ public class AvoidStaticImportCheck
      * to be excluded like {@code java.lang.System.out} for a variable or
      * {@code java.lang.Math.random} for a method. See notes section for details.
      *
-     * @param excludes a list of fully-qualified class names/specific
+     * @param excludes fully-qualified class names/specific
      *     static members where static imports are ok
      */
     public void setExcludes(String... excludes) {
@@ -151,8 +151,9 @@ public class AvoidStaticImportCheck
             ast.getFirstChild().getNextSibling();
         final FullIdent name = FullIdent.createFullIdent(startingDot);
 
-        if (!isExempt(name.getText())) {
-            log(startingDot, MSG_KEY, name.getText());
+        final String nameText = name.getText();
+        if (!isExempt(nameText)) {
+            log(startingDot, MSG_KEY, nameText);
         }
     }
 

@@ -2,14 +2,14 @@
 <checkstyle-metadata>
    <module>
       <check fully-qualified-name="com.puppycrawl.tools.checkstyle.checks.coding.InnerAssignmentCheck"
-             name="InnerAssignment"
-             parent="com.puppycrawl.tools.checkstyle.TreeWalker">
+              name="InnerAssignment"
+              parent="com.puppycrawl.tools.checkstyle.TreeWalker">
          <description>&lt;p&gt;
  Checks for assignments in subexpressions, such as in
  {@code String s = Integer.toString(i = 2);}.
  &lt;/p&gt;
  &lt;p&gt;
- Rationale: With the exception of loop idioms,
+ Rationale: Except for the loop idioms,
  all assignments should occur in their own top-level statement to increase readability.
  With inner assignments like the one given above, it is difficult to see all places
  where a variable is set.

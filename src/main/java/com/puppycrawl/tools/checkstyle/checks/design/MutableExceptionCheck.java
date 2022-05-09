@@ -42,7 +42,7 @@ import com.puppycrawl.tools.checkstyle.api.TokenTypes;
  * </p>
  * <p>
  * Rationale: Exception instances should represent an error
- * condition. Having non final fields not only allows the state to be
+ * condition. Having non-final fields not only allows the state to be
  * modified by accident and therefore mask the original condition but
  * also allows developers to accidentally forget to set the initial state.
  * In both cases, code catching the exception could draw incorrect
@@ -98,7 +98,7 @@ public final class MutableExceptionCheck extends AbstractCheck {
     /** Should we check current class or not. */
     private boolean checking;
     /** Specify pattern for exception class names. */
-    private Pattern format = Pattern.compile(DEFAULT_FORMAT);
+    private Pattern format = extendedClassNameFormat;
 
     /**
      * Setter to specify pattern for extended class names.

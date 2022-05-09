@@ -29,6 +29,7 @@ import com.puppycrawl.tools.checkstyle.api.AbstractCheck;
 import com.puppycrawl.tools.checkstyle.api.DetailAST;
 import com.puppycrawl.tools.checkstyle.api.FileContents;
 import com.puppycrawl.tools.checkstyle.api.TokenTypes;
+import com.puppycrawl.tools.checkstyle.utils.CheckUtil;
 import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 import com.puppycrawl.tools.checkstyle.utils.JavadocUtil;
 import com.puppycrawl.tools.checkstyle.utils.TokenUtil;
@@ -46,7 +47,7 @@ import com.puppycrawl.tools.checkstyle.utils.TokenUtil;
  * <p>
  * ATTENTION: empty line separator is required between token siblings,
  * not after line where token is found.
- * If token does not have same type sibling then empty line
+ * If token does not have a sibling of the same type, then empty line
  * is required at its end (for example for CLASS_DEF it is after '}').
  * Also, trailing comments are skipped.
  * </p>
@@ -535,7 +536,7 @@ public class EmptyLineSeparatorCheck extends AbstractCheck {
             if (postFixNode.isPresent()) {
                 // A post fix AST will always have a sibling METHOD CALL
                 // METHOD CALL will at least have two children
-                // The first first child is DOT in case of POSTFIX which have at least 2 children
+                // The first child is DOT in case of POSTFIX which have at least 2 children
                 // First child of DOT again puts us back to normal AST tree which will
                 // recurse down below from here
                 final DetailAST firstChildAfterPostFix = postFixNode.get();
@@ -641,11 +642,9 @@ public class EmptyLineSeparatorCheck extends AbstractCheck {
      * @param ast token
      * @param nextToken next token
      */
-    // suppress deprecation until https://github.com/checkstyle/checkstyle/issues/11166
-    @SuppressWarnings("deprecation")
     private void processPackage(DetailAST ast, DetailAST nextToken) {
         if (ast.getLineNo() > 1 && !hasEmptyLineBefore(ast)) {
-            if (getFileContents().getFileName().endsWith("package-info.java")) {
+            if (CheckUtil.isPackageInfo(getFilePath())) {
                 if (!ast.getFirstChild().hasChildren() && !isPrecededByJavadoc(ast)) {
                     log(ast, MSG_SHOULD_BE_SEPARATED, ast.getText());
                 }
@@ -879,7 +878,7 @@ public class EmptyLineSeparatorCheck extends AbstractCheck {
     }
 
     /**
-     * Checks if a token has a empty line before.
+     * Checks if a token has an empty line before.
      *
      * @param token token.
      * @return true, if token have empty line before.

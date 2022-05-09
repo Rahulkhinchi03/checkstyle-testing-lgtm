@@ -39,4 +39,13 @@ public class InputWhitespaceAfterBad {
     public void check6() {
         try {} catch(Exception e){} // warn
     }
+
+    public void check7() {
+        synchronized(this) { } // warn
+        synchronized (this) { }
+    }
+
+    public String check8() {
+        return("a" + "b"); // warn
+    }
 }

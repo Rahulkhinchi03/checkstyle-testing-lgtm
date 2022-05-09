@@ -20,11 +20,9 @@
 package com.puppycrawl.tools.checkstyle.checks.sizes;
 
 import java.util.ArrayDeque;
+import java.util.BitSet;
 import java.util.Deque;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import com.puppycrawl.tools.checkstyle.StatelessCheck;
@@ -39,7 +37,7 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
  * </p>
  * <p>
  * Rationale: If a method becomes very long it is hard to understand.
- * Therefore long methods should usually be refactored into several
+ * Therefore, long methods should usually be refactored into several
  * individual methods that focus on a specific task.
  * </p>
  * <ul>
@@ -73,24 +71,113 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
  * &lt;module name="MethodLength"/&gt;
  * </pre>
  * <p>
- * To configure the check so that it accepts methods with at most 60 lines:
+ * Example:
+ * </p>
+ * <pre>
+ * public class MyClass {
+ *   public MyClass() {  // constructor (line 1)
+ *        /&#42; line 2
+ *            ...
+ *           line 150 &#42;/
+ *   } // line 151, violation, as it is over 150
+ *
+ *   public void firstExample() { // line 1
+ *
+ *       // line 3
+ *       System.out.println("line 4");
+ *       /&#42; line 5
+ *          line 6 &#42;/
+ *   } // line 7, OK, as it is less than 150
+ *
+ *   public void secondExample() { // line 1
+ *       // line 2
+ *       System.out.println("line 3");
+ *
+ *       /&#42; line 5
+ *           ...
+ *          line 150 &#42;/
+ *   } // line 151, violation, as it is over 150
+ * }
+ * </pre>
+ * <p>
+ * To configure the check so that it accepts methods with at most 4 lines:
  * </p>
  * <pre>
  * &lt;module name="MethodLength"&gt;
  *   &lt;property name="tokens" value="METHOD_DEF"/&gt;
- *   &lt;property name="max" value="60"/&gt;
+ *   &lt;property name="max" value="4"/&gt;
  * &lt;/module&gt;
  * </pre>
  * <p>
- * To configure the check so that it accepts methods with at most 60 lines,
+ * Example:
+ * </p>
+ * <pre>
+ * public class MyTest {
+ *   public MyTest()  {            // constructor (line 1)
+ *       int var1 = 2;             // line 2
+ *       int var2 = 4;             // line 3
+ *       int sum = var1 + var2;  // line 4
+ *   } // line 5, OK, constructor is not mentioned in the tokens
+ *
+ *   public void firstMethod() { // line 1
+ *       // comment (line 2)
+ *       System.out.println("line 3");
+ *   } // line 4, OK, as it allows at most 4 lines
+ *
+ *   public void secondMethod() { // line 1
+ *       int index = 0;   // line 2
+ *       if (index &#60; 5) { // line 3
+ *           index++;     // line 4
+ *       }                // line 5
+ *   } // line 6, violation, as it is over 4 lines
+ *
+ *   public void thirdMethod() { // line 1
+ *
+ *       // comment (line 3)
+ *       System.out.println("line 4");
+ *   } // line 5, violation, as it is over 4 lines
+ * }
+ * </pre>
+ * <p>
+ * To configure the check so that it accepts methods with at most 4 lines,
  * not counting empty lines and comments:
  * </p>
  * <pre>
  * &lt;module name="MethodLength"&gt;
  *   &lt;property name="tokens" value="METHOD_DEF"/&gt;
- *   &lt;property name="max" value="60"/&gt;
+ *   &lt;property name="max" value="4"/&gt;
  *   &lt;property name="countEmpty" value="false"/&gt;
  * &lt;/module&gt;
+ * </pre>
+ * <p>
+ * Example:
+ * </p>
+ * <pre>
+ * public class MyTest {
+ *   public MyTest()  {          // constructor (line 1)
+ *       int var1 = 2;           // line 2
+ *       int var2 = 4;           // line 3
+ *       int sum = var1 + var2;  // line 4
+ *   } // line 5, OK, constructor is not mentioned in the tokens
+ *
+ *   public void firstMethod() { // line 1
+ *       // comment - not counted as line
+ *       System.out.println("line 2");
+ *   } // line 3, OK, as it allows at most 4 lines
+ *
+ *   public void secondMethod() { // line 1
+ *       int index = 0;   // line 2
+ *       if (index &#60; 5) { // line 3
+ *           index++;     // line 4
+ *       }                // line 5
+ *   } // line 6, violation, as it is over 4 lines
+ *
+ *   public void thirdMethod() { // line 1
+ *
+ *       // comment - not counted as line
+ *       System.out.println("line 2");
+ *   } // line 3, OK, as it allows at most 4 lines
+ * }
  * </pre>
  * <p>
  * Parent is {@code com.puppycrawl.tools.checkstyle.TreeWalker}
@@ -184,24 +271,25 @@ public class MethodLengthCheck extends AbstractCheck {
     private static int countUsedLines(DetailAST ast) {
         final Deque<DetailAST> nodes = new ArrayDeque<>();
         nodes.add(ast);
-        final Set<Integer> usedLines = new HashSet<>();
+        final BitSet usedLines = new BitSet();
+        final int startLineNo = ast.getLineNo();
         while (!nodes.isEmpty()) {
             final DetailAST node = nodes.removeFirst();
-            final int lineNo = node.getLineNo();
+            final int lineIndex = node.getLineNo() - startLineNo;
             // text block requires special treatment,
             // since it is the only non-comment token that can span more than one line
             if (node.getType() == TokenTypes.TEXT_BLOCK_LITERAL_BEGIN) {
-                IntStream.rangeClosed(lineNo, node.getLastChild().getLineNo())
-                    .forEach(usedLines::add);
+                final int endLineIndex = node.getLastChild().getLineNo() - startLineNo;
+                usedLines.set(lineIndex, endLineIndex + 1);
             }
             else {
-                usedLines.add(lineNo);
+                usedLines.set(lineIndex);
                 Stream.iterate(
                     node.getLastChild(), Objects::nonNull, DetailAST::getPreviousSibling
                 ).forEach(nodes::addFirst);
             }
         }
-        return usedLines.size();
+        return usedLines.cardinality();
     }
 
     /**

@@ -64,7 +64,7 @@ public abstract class AbstractHeaderCheck extends AbstractFileSetCheck
         StandardCharsets.UTF_8.name()));
 
     /**
-     * Hook method for post processing header lines.
+     * Hook method for post-processing header lines.
      * This implementation does nothing.
      */
     protected abstract void postProcessHeaderLines();
@@ -75,8 +75,7 @@ public abstract class AbstractHeaderCheck extends AbstractFileSetCheck
      * @return the header lines to check against.
      */
     protected List<String> getHeaderLines() {
-        final List<String> copy = new ArrayList<>(readerLines);
-        return Collections.unmodifiableList(copy);
+        return List.copyOf(readerLines);
     }
 
     /**

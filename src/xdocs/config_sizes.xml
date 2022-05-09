@@ -26,7 +26,7 @@
         <p>
           Rationale: If an anonymous inner class becomes very long it is hard
           to understand and to see the flow of the method where the class is
-          defined. Therefore long anonymous inner classes should usually be
+          defined. Therefore, long anonymous inner classes should usually be
           refactored into a named inner class. See also Bloch, Effective
           Java, p. 93.
         </p>
@@ -232,7 +232,7 @@
 
         <p>
           Rationale: If a source file becomes very long it is hard to
-          understand. Therefore long classes should usually be refactored
+          understand. Therefore, long classes should usually be refactored
           into several individual classes that focus on a specific task.
         </p>
       </subsection>
@@ -331,7 +331,7 @@
         <p>
           Rationale: Similar to anonymous inner classes, if lambda body becomes very long
           it is hard to understand and to see the flow of the method
-          where the lambda is defined. Therefore long lambda body
+          where the lambda is defined. Therefore, long lambda body
           should usually be extracted to method.
         </p>
       </subsection>
@@ -608,7 +608,7 @@ import java.util.Arrays; // ok
             or can set property <code>tabWidth</code> for <code>LineLength</code> alone.
           </li>
           <li>
-            By default package and import statements (lines matching pattern
+            By default, package and import statements (lines matching pattern
             <code>^(package|import) .*</code>) are not verified by
             this check.
           </li>
@@ -892,7 +892,7 @@ public class ExampleClass {
 
         <p>
           Rationale: If a method becomes very long it is hard to
-          understand. Therefore long methods should usually be refactored into
+          understand. Therefore, long methods should usually be refactored into
           several individual methods that focus on a specific task.
         </p>
       </subsection>
@@ -960,28 +960,109 @@ public class ExampleClass {
         <source>
 &lt;module name="MethodLength"/&gt;
         </source>
+        <p>Example:</p>
+        <source>
+public class MyClass {
+  public MyClass() {  // constructor (line 1)
+      /* line 2
+          ...
+         line 150 */
+  } // line 151, violation, as it is over 150
 
+  public void firstExample() { // line 1
+
+      // line 3
+      System.out.println("line 4");
+      /* line 5
+         line 6 */
+  } // line 7, OK, as it is less than 150
+
+  public void secondExample() { // line 1
+      // line 2
+      System.out.println("line 3");
+
+      /* line 5
+          ...
+         line 150 */
+  } // line 151, violation, as it is over 150
+}
+        </source>
         <p>
-          To configure the check so that it accepts methods with at most 60
+          To configure the check so that it accepts methods with at most 4
           lines:
         </p>
         <source>
 &lt;module name="MethodLength"&gt;
   &lt;property name="tokens" value="METHOD_DEF"/&gt;
-  &lt;property name="max" value="60"/&gt;
+  &lt;property name="max" value="4"/&gt;
 &lt;/module&gt;
         </source>
+        <p>Example:</p>
+        <source>
+public class MyTest {
+  public MyTest()  {          // constructor (line 1)
+      int var1 = 2;           // line 2
+      int var2 = 4;           // line 3
+      int sum = var1 + var2;  // line 4
+  } // line 5, OK, constructor is not mentioned in the tokens
 
+  public void firstMethod() { // line 1
+      // comment (line 2)
+      System.out.println("line 3");
+  } // line 4, OK, as it allows at most 4 lines
+
+  public void secondMethod() { // line 1
+      int index = 0;   // line 2
+      if (index &#60; 5) { // line 3
+          index++;     // line 4
+      }                // line 5
+  } // line 6, violation, as it is over 4 lines
+
+  public void thirdMethod() { // line 1
+
+      // comment (line 3)
+      System.out.println("line 4");
+  } // line 5, violation, as it is over 4 lines
+}
+        </source>
         <p>
-          To configure the check so that it accepts methods with at most 60
+          To configure the check so that it accepts methods with at most 4
           lines, not counting empty lines and comments:
         </p>
         <source>
 &lt;module name="MethodLength"&gt;
   &lt;property name="tokens" value="METHOD_DEF"/&gt;
-  &lt;property name="max" value="60"/&gt;
+  &lt;property name="max" value="4"/&gt;
   &lt;property name="countEmpty" value="false"/&gt;
 &lt;/module&gt;
+        </source>
+        <p>Example:</p>
+        <source>
+public class MyTest {
+  public MyTest()  {          // constructor (line 1)
+      int var1 = 2;           // line 2
+      int var2 = 4;           // line 3
+      int sum = var1 + var2;  // line 4
+  } // line 5, OK, constructor is not mentioned in the tokens
+
+  public void firstMethod() { // line 1
+      // comment - not counted as line
+      System.out.println("line 2");
+  } // line 3, OK, as it allows at most 4 lines
+
+  public void secondMethod() { // line 1
+      int index = 0;   // line 2
+      if (index &#60; 5) { // line 3
+          index++;     // line 4
+      }                // line 5
+  } // line 6, violation, as it is over 4 lines
+
+  public void thirdMethod() { // line 1
+
+      // comment - not counted as line
+      System.out.println("line 2");
+  } // line 3, OK, as it allows at most 4 lines
+}
         </source>
       </subsection>
 
