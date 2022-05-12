@@ -6,7 +6,7 @@
 
 ##########################################################################################
 # Use the `path_classifiers` block to define changes to the default classification of    #
-# files.                                                                                 #
+# files                                                                                 #
 ##########################################################################################
 
 path_classifiers:
