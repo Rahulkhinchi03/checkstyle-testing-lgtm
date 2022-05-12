@@ -4,7 +4,7 @@
         "-//Checkstyle//DTD Checkstyle Configuration 1.1//EN"
         "https://checkstyle.org/dtds/configuration_1_1.dtd">
 
-<module name="Checker">
+#<module name="Checker">
     <module name="TreeWalker">
         <module name="TypeName">
             <property name="severity" value="warning"/>
