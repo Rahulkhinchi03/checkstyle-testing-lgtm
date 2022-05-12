@@ -1,4 +1,4 @@
 path_classifiers:
   generated:
     - exclude: src/it/resources/org/checkstyle/suppressionpathfilter/**/*.java
-      
+    
